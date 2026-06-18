@@ -1,0 +1,75 @@
+<p>
+  <ac:structured-macro ac:macro-id="51ea9a1d-29b1-408f-8a3b-693e4d63a0d0" ac:name="toc" ac:schema-version="1"/>
+</p>
+<h1>修改 schema</h1>
+<p>
+  <ac:link>
+    <ri:page ri:content-title="领域模型修改"/>
+  </ac:link>
+</p>
+<p>
+  <br/>
+</p>
+<h1>修改接口</h1>
+<h2>领域对象新增或修改（/domain_object_save）</h2>
+<p>
+  <strong>请求体参数：</strong>
+</p>
+<ac:structured-macro ac:macro-id="67c7d52c-a009-4889-8902-29a9ac0c7252" ac:name="code" ac:schema-version="1">
+  <ac:parameter ac:name="collapse">true</ac:parameter>
+  <ac:parameter ac:name="title">domain_object_save</ac:parameter>
+  <ac:parameter ac:name="language">json</ac:parameter>
+  <ac:plain-text-body><![CDATA[[
+	{
+		"org_id": "组织id",
+		"root_org_id": "根组织id",
+		"org_name": "根组织名称",
+		"org_72_id": "组织72位id",
+		"dimension_name": "维度名称",
+		"org_dimension_id": "维度id",
+		"domain_object_id": "领域对象id",
+		"lg_unique_id": "蓝鸽内部唯一性id",
+		"save_mode": 1,
+		"attribute_map": {
+			"name": "名称",
+			"class_name": "substation",
+			"attri1": "属性值1"
+		}
+	}
+]]]></ac:plain-text-body>
+</ac:structured-macro>
+<p>
+  <br/>
+</p>
+<h2>针对领域对象的事实例新增或修改（/coop_base_on_domain_object_save）</h2>
+<p>删除事时，需要先查询分解的所有任务和承接这些任务的事，然后这些事也要删除</p>
+<p>
+  <br/>
+</p>
+<h1>修改方法</h1>
+<h2>领域对象树结构保存</h2>
+<ac:structured-macro ac:name="note" ac:schema-version="1">
+  <ac:rich-text-body>
+    <p>这是一个 <strong>note</strong> 宏示例，用于提示重要事项。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="warning" ac:schema-version="1">
+  <ac:parameter ac:name="title">注意</ac:parameter>
+  <ac:rich-text-body>
+    <p>这是一个 <strong>warning</strong> 宏，颜色为黄色。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="tip" ac:schema-version="1">
+  <ac:rich-text-body>
+    <p>这是一个 <strong>tip</strong> 宏。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+<h1>新增接口</h1>
+<h2>任务</h2>
+<h3>任务新增或修改（/task_save）</h3>
+<h1>新增方法</h1>
+<h2>任务</h2>
+<h3>任务批量删除</h3>
+<h3>承接任务</h3>
+<h2>状态快照</h2>
+<h3>状态快照新增或修改</h3>

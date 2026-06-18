@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+*.log
+.DS_Store
+.vscode-test/
+
+# Generated dev artifacts
+tests/manual-parse.bundle.mjs
+tests/demo.rendered.html
+tests/*.bundle.mjs
+
+# Keep tests/demo-shot.png (it's referenced by README)

@@ -1,0 +1,100 @@
+{
+  "name": "confluence-preview",
+  "displayName": "Confluence Preview",
+  "description": "Preview Confluence Storage Format (Source Editor XHTML) as it appears in Confluence",
+  "version": "0.1.0",
+  "publisher": "local",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "confluence",
+    "preview",
+    "storage-format",
+    "wiki"
+  ],
+  "activationEvents": [
+    "onLanguage:confluence",
+    "onLanguage:html",
+    "onCommand:confluence-preview.openPreview"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "confluence",
+        "aliases": [
+          "Confluence",
+          "Confluence Storage Format"
+        ],
+        "filenamePatterns": [
+          "**/*.confluence",
+          "**/*.cfl",
+          "**/*.confluence-storage"
+        ],
+        "configuration": "./confluence.configuration.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "confluence-preview.openPreview",
+        "title": "Confluence: Open Preview",
+        "category": "Confluence",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "confluence-preview.copyHtml",
+        "title": "Confluence: Copy Rendered HTML",
+        "category": "Confluence"
+      },
+      {
+        "command": "confluence-preview.exportMarkdown",
+        "title": "Confluence: Export to Markdown",
+        "category": "Confluence"
+      },
+      {
+        "command": "confluence-preview.refresh",
+        "title": "Confluence: Refresh Preview",
+        "category": "Confluence",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "confluence-preview.openPreview",
+          "when": "editorLangId == confluence || editorLangId == html",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "confluence-preview.refresh",
+          "when": "false"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "demo": "node_modules\\.bin\\esbuild tests/manual-parse.mjs --bundle --platform=node --format=esm --target=node18 --outfile=tests/manual-parse.bundle.mjs && node tests/manual-parse.bundle.mjs",
+    "test": "node --test tests/"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.75.0",
+    "@vscode/test-cli": "^0.0.4",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12"
+  }
+}

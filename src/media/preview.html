@@ -1,0 +1,26 @@
+<!-- Fallback / standalone preview shell. The extension normally injects its own shell with CSP-aware URIs. This file is kept for debugging the webview in a regular browser. -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Confluence Preview (Standalone)</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body class="vscode-light">
+<div id="app">
+  <header class="cf-header">
+    <span class="cf-title">Confluence Preview (standalone)</span>
+  </header>
+  <main class="cf-main">
+    <aside class="cf-outline-pane">
+      <div class="cf-outline-header">Outline</div>
+      <nav class="cf-outline" id="cf-outline"></nav>
+    </aside>
+    <article class="cf-content" id="cf-content"></article>
+  </main>
+</div>
+<script src="highlight.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
