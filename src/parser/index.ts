@@ -13,7 +13,8 @@ import type { RenderContext } from "./elements";
 import { renderStructuredMacro, renderInlineMacro, renderAcLink } from "./macros/registry";
 import type { ParseResult } from "./types";
 
-export type { ParseResult, OutlineNode } from "./types";
+export type { ParseResult } from "./types";
+export type { OutlineNode } from "./outline";
 
 /**
  * Preprocess the source: replace <![CDATA[...]]> blocks with placeholder
