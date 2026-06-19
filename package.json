@@ -1,10 +1,10 @@
 {
-  "name": "confluence-preview",
+  "name": "confluence-preview-",
   "displayName": "Confluence Preview",
   "description": "Preview Confluence Storage Format (Source Editor XHTML) as it appears in Confluence",
+  "icon": "image/icon.png",
   "version": "0.1.0",
-  "publisher": "local",
-  "private": true,
+  "publisher": "wake",
   "license": "MIT",
   "engines": {
     "vscode": "^1.75.0"
@@ -12,6 +12,14 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uwakeme/confluence_preview.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uwakeme/confluence_preview/issues"
+  },
+  "homepage": "https://github.com/uwakeme/confluence_preview#readme",
   "keywords": [
     "confluence",
     "preview",
@@ -84,7 +92,9 @@
     "vscode:prepublish": "npm run build",
     "build": "node esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch",
-    "test": "node --test \"tests/*.test.mjs\""
+    "test": "node --test \"tests/*.test.mjs\"",
+    "package": "vsce package",
+    "publish": "vsce publish"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

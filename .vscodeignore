@@ -1,0 +1,44 @@
+# Files / folders vsce should NOT include in the .vsix package.
+# (node_modules, dist, .vscode-test are already excluded by vsce defaults.)
+
+# Source files — they get bundled into dist/ by esbuild
+src/**
+*.ts
+!dist/**/*.d.ts
+
+# Tests and dev artifacts
+tests/**
+tests/**/*
+*.test.mjs
+tests/manual-parse.bundle.mjs
+tests/demo.rendered.html
+
+# Build config and harness
+.esbuild/
+esbuild.config.mjs
+tsconfig.json
+.harness/**
+
+# Editor / OS junk
+.vscode/**
+.vscode-test/**
+.DS_Store
+*.log
+*.map
+
+# Screenshots are for README only — don't ship in .vsix
+# (icon.png stays: it's referenced by package.json)
+image/preview-*.png
+image/*.tmp.png
+
+# Git + GitHub
+.git/**
+.gitignore
+.github/**
+
+# AI agent docs (not user-facing)
+AGENTS.md
+
+# Keep these — they ship with the extension
+!dist/media/**
+!confluence.configuration.json
