@@ -1,0 +1,353 @@
+<h1>Confluence 预览插件测试文档</h1>
+<p>这是一个用于测试 <strong>confluence-preview</strong> VS Code 插件的样例文件。覆盖了所有内置宏、文本格式、列表、表格以及结构化链接。</p>
+
+<ac:structured-macro ac:name="toc" ac:schema-version="1">
+  <ac:parameter ac:name="maxLevel">4</ac:parameter>
+  <ac:parameter ac:name="style">disc</ac:parameter>
+</ac:structured-macro>
+
+<h1>一、文本格式与基础排版</h1>
+<h2>1.1 内联样式</h2>
+<p>这里演示 <strong>粗体</strong>、<em>斜体</em>、<u>下划线</u>、<s>删除线</s>、<code>行内代码</code> 以及 <strong><em>嵌套</em>样式</strong>。</p>
+<p>上标 H<sub>2</sub>O，下标 E = mc<sup>2</sup>，以及一个 <ac:structured-macro ac:name="emoticon" ac:schema-version="1">
+  <ac:parameter ac:name="name">smile</ac:parameter>
+</ac:structured-macro> 表情。另一个 <ac:structured-macro ac:name="cheese" ac:schema-version="1"/> 表情（别名）。</p>
+
+<h2>1.2 标题层级</h2>
+<h1>H1 标题</h1>
+<h2>H2 标题</h2>
+<h3>H3 标题</h3>
+<h4>H4 标题</h4>
+<h5>H5 标题</h5>
+<h6>H6 标题</h6>
+
+<h2>1.3 锚点</h2>
+<ac:structured-macro ac:name="anchor" ac:schema-version="1">
+  <ac:parameter ac:name="anchor-name">section-anchor-demo</ac:parameter>
+</ac:structured-macro>
+<p>上面的 <code>anchor</code> 宏会渲染成页面内可定位的锚点。</p>
+
+<h1>二、列表</h1>
+<h2>2.1 无序列表</h2>
+<ul>
+  <li>苹果</li>
+  <li>香蕉
+    <ul>
+      <li>小米蕉</li>
+      <li>芭蕉</li>
+    </ul>
+  </li>
+  <li>橘子</li>
+</ul>
+<h2>2.2 有序列表</h2>
+<ol>
+  <li>第一步：准备环境</li>
+  <li>第二步：克隆代码
+    <ol>
+      <li>使用 HTTPS</li>
+      <li>使用 SSH</li>
+    </ol>
+  </li>
+  <li>第三步：构建项目</li>
+</ol>
+
+<h1>三、表格</h1>
+<table>
+  <colgroup>
+    <col/>
+    <col/>
+    <col/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th>类型</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>org_id</code></td>
+      <td>string</td>
+      <td>组织唯一标识</td>
+    </tr>
+    <tr>
+      <td><code>save_mode</code></td>
+      <td>int</td>
+      <td>1 = 新增，2 = 更新，3 = 删除</td>
+    </tr>
+    <tr>
+      <td><code>attribute_map</code></td>
+      <td>object</td>
+      <td>属性键值对映射，<strong>必填</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>四、代码块</h1>
+<h2>4.1 JSON</h2>
+<ac:structured-macro ac:name="code" ac:schema-version="1">
+  <ac:parameter ac:name="title">domain_object_save</ac:parameter>
+  <ac:parameter ac:name="language">json</ac:parameter>
+  <ac:parameter ac:name="collapse">true</ac:parameter>
+  <ac:plain-text-body><![CDATA[{
+  "org_id": "org_001",
+  "root_org_id": "org_root",
+  "org_name": "示例组织",
+  "save_mode": 1,
+  "attribute_map": {
+    "name": "示例对象",
+    "class_name": "substation"
+  }
+}]]></ac:plain-text-body>
+</ac:structured-macro>
+
+<h2>4.2 TypeScript</h2>
+<ac:structured-macro ac:name="code" ac:schema-version="1">
+  <ac:parameter ac:name="title">render.ts</ac:parameter>
+  <ac:parameter ac:name="language">typescript</ac:parameter>
+  <ac:plain-text-body><![CDATA[export function render(input: string): string {
+  const $ = cheerio.load(input);
+  return $("body").html() ?? "";
+}]]></ac:plain-text-body>
+</ac:structured-macro>
+
+<h2>4.3 SQL</h2>
+<ac:structured-macro ac:name="code" ac:schema-version="1">
+  <ac:parameter ac:name="language">sql</ac:parameter>
+  <ac:plain-text-body><![CDATA[SELECT id, name
+FROM org
+WHERE root_org_id = 'org_root'
+ORDER BY name ASC;]]></ac:plain-text-body>
+</ac:structured-macro>
+
+<h1>五、信息提示宏</h1>
+<h2>5.1 Note</h2>
+<ac:structured-macro ac:name="note" ac:schema-version="1">
+  <ac:rich-text-body>
+    <p>这是一个 <strong>note</strong> 宏，用于提示普通注意事项。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>5.2 Info</h2>
+<ac:structured-macro ac:name="info" ac:schema-version="1">
+  <ac:parameter ac:name="title">提示</ac:parameter>
+  <ac:rich-text-body>
+    <p>这是一个 <strong>info</strong> 宏，提供一般信息。包含 <em>链接</em> 和 <code>代码</code>。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>5.3 Warning</h2>
+<ac:structured-macro ac:name="warning" ac:schema-version="1">
+  <ac:parameter ac:name="title">警告</ac:parameter>
+  <ac:rich-text-body>
+    <p>这是一个 <strong>warning</strong> 宏，颜色为黄色，用于提醒重要事项。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>5.4 Tip</h2>
+<ac:structured-macro ac:name="tip" ac:schema-version="1">
+  <ac:rich-text-body>
+    <p>这是一个 <strong>tip</strong> 宏，建议性的技巧提示。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h1>六、Panel 与布局</h1>
+<h2>6.1 Panel</h2>
+<ac:structured-macro ac:name="panel" ac:schema-version="1">
+  <ac:parameter ac:name="title">面板标题</ac:parameter>
+  <ac:rich-text-body>
+    <p>这是一个 <strong>panel</strong> 宏，渲染为带边框的面板。</p>
+    <ul>
+      <li>支持嵌套列表</li>
+      <li>支持 <code>行内代码</code></li>
+    </ul>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>6.2 Section / Column</h2>
+<ac:structured-macro ac:name="section" ac:schema-version="1">
+  <ac:parameter ac:name="title">分栏示例</ac:parameter>
+  <ac:rich-text-body>
+    <p>section 内部用 column 实现分栏布局：</p>
+    <ac:structured-macro ac:name="column" ac:schema-version="1">
+      <ac:parameter ac:name="width">50%</ac:parameter>
+      <ac:rich-text-body>
+        <p><strong>左栏</strong></p>
+        <p>这是左栏内容。</p>
+      </ac:rich-text-body>
+    </ac:structured-macro>
+    <ac:structured-macro ac:name="column" ac:schema-version="1">
+      <ac:parameter ac:name="width">50%</ac:parameter>
+      <ac:rich-text-body>
+        <p><strong>右栏</strong></p>
+        <p>这是右栏内容。</p>
+      </ac:rich-text-body>
+    </ac:structured-macro>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h1>七、可折叠 / 引用</h1>
+<h2>7.1 Expand</h2>
+<ac:structured-macro ac:name="expand" ac:schema-version="1">
+  <ac:parameter ac:name="title">点击展开详细说明</ac:parameter>
+  <ac:rich-text-body>
+    <p>这是 <strong>expand</strong> 宏的可折叠内容。展开后可见：</p>
+    <ul>
+      <li>条目 A</li>
+      <li>条目 B</li>
+    </ul>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>7.2 Quote</h2>
+<ac:structured-macro ac:name="quote" ac:schema-version="1">
+  <ac:rich-text-body>
+    <p>Stay hungry, stay foolish.</p>
+    <p><em>— Steve Jobs</em></p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>7.3 Noformat</h2>
+<ac:structured-macro ac:name="noformat" ac:schema-version="1">
+  <ac:plain-text-body><![CDATA[这是 noformat 宏，
+保留  原始   空白  和换行，
+不做任何 HTML 转义。< > & " ']]></ac:plain-text-body>
+</ac:structured-macro>
+
+<h2>7.4 Excerpt</h2>
+<ac:structured-macro ac:name="excerpt" ac:schema-version="1">
+  <ac:parameter ac:name="hidden">true</ac:parameter>
+  <ac:rich-text-body>
+    <p>这是一个 <strong>excerpt</strong> 宏（hidden=true），可以被 excerpt-include 引用。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>7.5 Excerpt Include</h2>
+<ac:structured-macro ac:name="excerpt-include" ac:schema-version="1">
+  <ac:parameter ac:name="page">测试文档</ac:parameter>
+  <ac:rich-text-body>
+    <p>默认显示：这是 excerpt-include 的回退内容。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h2>7.6 Children</h2>
+<ac:structured-macro ac:name="children" ac:schema-version="1">
+  <ac:parameter ac:name="page">父页面</ac:parameter>
+  <ac:rich-text-body>
+    <p>children 宏在离线环境会回退为提示：子页面列表不可解析。</p>
+  </ac:rich-text-body>
+</ac:structured-macro>
+
+<h1>八、状态 / 任务 / 链接</h1>
+<h2>8.1 Status</h2>
+<p>项目状态：
+  <ac:structured-macro ac:name="status" ac:schema-version="1">
+    <ac:parameter ac:name="title">进行中</ac:parameter>
+    <ac:parameter ac:name="colour">Blue</ac:parameter>
+  </ac:structured-macro>
+  ，优先级：
+  <ac:structured-macro ac:name="status" ac:schema-version="1">
+    <ac:parameter ac:name="title">高</ac:parameter>
+    <ac:parameter ac:name="colour">Red</ac:parameter>
+  </ac:structured-macro>
+  。</p>
+
+<h2>8.2 Jira</h2>
+<p>关联工单：
+  <ac:structured-macro ac:name="jira" ac:schema-version="1">
+    <ac:parameter ac:name="key">PROJ-1234</ac:parameter>
+  </ac:structured-macro>
+  ，另一个：
+  <ac:structured-macro ac:name="jira" ac:schema-version="1">
+    <ac:parameter ac:name="key">PROJ-5678</ac:parameter>
+  </ac:structured-macro>
+</p>
+
+<h2>8.3 User Mention</h2>
+<p>负责人：
+  <ac:structured-macro ac:name="user-mention" ac:schema-version="1">
+    <ac:parameter ac:name="account-id">u-001</ac:parameter>
+    <ac:parameter ac:name="display-name">张三</ac:parameter>
+  </ac:structured-macro>
+  ，协作人：
+  <ac:structured-macro ac:name="user-mention" ac:schema-version="1">
+    <ac:parameter ac:name="account-id">u-002</ac:parameter>
+  </ac:structured-macro>
+</p>
+
+<h2>8.4 结构化链接 (ac:link)</h2>
+<p>内部页面：
+  <ac:link>
+    <ri:page ri:content-title="领域模型修改"/>
+  </ac:link>
+</p>
+<p>附件：
+  <ac:link>
+    <ri:attachment ri:filename="design.pdf"/>
+  </ac:link>
+</p>
+<p>外部链接：
+  <ac:link>
+    <ri:url ri:value="https://example.com/docs"/>
+  </ac:link>
+</p>
+<p>用户链接：
+  <ac:link>
+    <ri:user ri:username="alice"/>
+  </ac:link>
+</p>
+
+<h2>8.5 Link 宏</h2>
+<p>
+  <ac:structured-macro ac:name="link" ac:schema-version="1">
+    <ac:parameter ac:name="page">子页面 A</ac:parameter>
+  </ac:structured-macro>
+  ，
+  <ac:structured-macro ac:name="pagelink" ac:schema-version="1">
+    <ac:parameter ac:name="page">子页面 B</ac:parameter>
+  </ac:structured-macro>
+</p>
+
+<h1>九、HTML 注入安全测试</h1>
+<p>下面这些内容应该被转义，不应被当作 HTML 解析：</p>
+<p>用户输入：&lt;script&gt;alert('xss')&lt;/script&gt;</p>
+<p>属性：&lt;img src=x onerror=alert(1)&gt;</p>
+
+<h1>十、表格中嵌套宏</h1>
+<table>
+  <colgroup>
+    <col/>
+    <col/>
+  </colgroup>
+  <thead>
+    <tr>
+      <th>类型</th>
+      <th>示例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Note 宏</td>
+      <td>
+        <ac:structured-macro ac:name="note" ac:schema-version="1">
+          <ac:rich-text-body>
+            <p>表格内的 note 宏</p>
+          </ac:rich-text-body>
+        </ac:structured-macro>
+      </td>
+    </tr>
+    <tr>
+      <td>Status 宏</td>
+      <td>
+        <ac:structured-macro ac:name="status" ac:schema-version="1">
+          <ac:parameter ac:name="title">完成</ac:parameter>
+          <ac:parameter ac:name="colour">Green</ac:parameter>
+        </ac:structured-macro>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>十一、结尾</h1>
+<p>如果以上所有元素都正确渲染，说明预览插件的核心功能已经验证通过。</p>

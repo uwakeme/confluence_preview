@@ -84,8 +84,7 @@
     "vscode:prepublish": "npm run build",
     "build": "node esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch",
-    "demo": "node_modules\\.bin\\esbuild tests/manual-parse.mjs --bundle --platform=node --format=esm --target=node18 --outfile=tests/manual-parse.bundle.mjs && node tests/manual-parse.bundle.mjs",
-    "test": "node --test tests/"
+    "test": "node --test \"tests/*.test.mjs\""
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
