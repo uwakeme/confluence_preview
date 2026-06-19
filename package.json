@@ -1,6 +1,6 @@
 {
-  "name": "confluence-preview-",
-  "displayName": "Confluence Preview",
+  "name": "confluence-previewer",
+  "displayName": "Confluence Previewer",
   "description": "Preview Confluence Storage Format (Source Editor XHTML) as it appears in Confluence",
   "icon": "image/icon.png",
   "version": "0.1.0",
@@ -23,6 +23,7 @@
   "keywords": [
     "confluence",
     "preview",
+    "jira",
     "storage-format",
     "wiki"
   ],
@@ -50,24 +51,24 @@
     ],
     "commands": [
       {
-        "command": "confluence-preview.openPreview",
-        "title": "Confluence: Open Preview",
+        "command": "confluence-previewer.openPreview",
+        "title": "Confluence: Open Previewer",
         "category": "Confluence",
-        "icon": "$(open-preview)"
+        "icon": "$(open-previewer)"
       },
       {
-        "command": "confluence-preview.copyHtml",
+        "command": "confluence-previewer.copyHtml",
         "title": "Confluence: Copy Rendered HTML",
         "category": "Confluence"
       },
       {
-        "command": "confluence-preview.exportMarkdown",
+        "command": "confluence-previewer.exportMarkdown",
         "title": "Confluence: Export to Markdown",
         "category": "Confluence"
       },
       {
-        "command": "confluence-preview.refresh",
-        "title": "Confluence: Refresh Preview",
+        "command": "confluence-previewer.refresh",
+        "title": "Confluence: Refresh Previewer",
         "category": "Confluence",
         "icon": "$(refresh)"
       }
@@ -75,14 +76,14 @@
     "menus": {
       "editor/title": [
         {
-          "command": "confluence-preview.openPreview",
+          "command": "confluence-previewer.openPreview",
           "when": "editorLangId == confluence || editorLangId == html",
           "group": "navigation"
         }
       ],
       "commandPalette": [
         {
-          "command": "confluence-preview.refresh",
+          "command": "confluence-previewer.refresh",
           "when": "false"
         }
       ]

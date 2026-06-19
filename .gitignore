@@ -11,3 +11,4 @@ tests/demo.rendered.html
 tests/*.bundle.mjs
 
 # Keep tests/demo-shot.png (it's referenced by README)
+*.vsix
