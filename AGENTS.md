@@ -41,13 +41,13 @@ Preview **Confluence Storage Format** (the XHTML behind Confluence's Source Edit
 - Unit tests: `npm test` — `node --test tests/` (Node's built-in test runner, `*.test.mjs` files)
 - Add a `*.test.mjs` under `tests/` for every new parser behavior or macro renderer; assert on emitted HTML / outline / warnings
 - After parser changes, open `tests/test.confluence` in VS Code with the preview pane to eyeball visual fidelity
-- All tests must pass before opening a PR
+- All tests must pass before pushing
 
-## PR & commit conventions
+## Commit & push conventions
 
-- Branch from `main`; never push to it directly
 - Commit message: conventional commits (`feat:` / `fix:` / `docs:` / `refactor:` / `test:`)
-- Open PR via `gh pr create` once CI is green
+- Push directly to `main` — no PR required (personal project, no reviewers)
+- Either HTTPS or SSH works; if one is blocked by the network, switch with `git remote set-url origin <other-url>`
 
 ## Security
 
