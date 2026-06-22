@@ -11,19 +11,19 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      "confluence-preview.openPreview",
+      "confluence-previewer.openPreview",
       () => previewPanel.openForActiveEditor(),
     ),
     vscode.commands.registerCommand(
-      "confluence-preview.refresh",
+      "confluence-previewer.refresh",
       () => previewPanel.refresh(),
     ),
     vscode.commands.registerCommand(
-      "confluence-preview.copyHtml",
+      "confluence-previewer.copyHtml",
       () => previewPanel.copyRenderedHtml(),
     ),
     vscode.commands.registerCommand(
-      "confluence-preview.exportMarkdown",
+      "confluence-previewer.exportMarkdown",
       () => previewPanel.exportMarkdown(),
     ),
   );

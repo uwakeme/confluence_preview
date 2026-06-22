@@ -30,7 +30,7 @@
   "activationEvents": [
     "onLanguage:confluence",
     "onLanguage:html",
-    "onCommand:confluence-preview.openPreview"
+    "onCommand:confluence-previewer.openPreview"
   ],
   "main": "./dist/extension.js",
   "contributes": {
