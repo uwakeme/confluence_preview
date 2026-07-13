@@ -34,32 +34,39 @@
       return;
     }
     container.innerHTML = renderOutlineNodes(outline);
+    applyCollapsedState();
+    bindOutlineToggles();
   }
 
   function renderOutlineNodes(nodes) {
     return (
-      "<ul class=\"outline-root\">" +
+      "<ul class=\"cf-outline-root\">" +
       nodes.map(renderOutlineNode).join("") +
       "</ul>"
     );
   }
 
   function renderOutlineNode(node) {
-    const indent = "  ".repeat(node.level);
     const text = escapeHtml(node.text);
+    const hasChildren = node.children && node.children.length > 0;
+    const safeId = escapeHtml(node.id);
+    const chevron = hasChildren
+      ? '<span class="cf-outline-chevron" role="button" tabindex="-1" aria-label="Toggle" title="Click to collapse/expand"></span>'
+      : '<span class="cf-outline-chevron cf-outline-chevron--leaf" aria-hidden="true"></span>';
+    const row =
+      '<div class="cf-outline-row">' +
+      chevron +
+      '<a class="cf-outline-link" data-level="' + node.level + '" data-target="' + safeId +
+      '" href="#' + safeId + '" title="' + text + '">' + text + "</a>" +
+      "</div>";
     let html =
-      indent +
-      '<li><a class="cf-outline-link" data-target="' + escapeHtml(node.id) + '" href="#' +
-      escapeHtml(node.id) + '">' + text + "</a>";
-    if (node.children && node.children.length > 0) {
+      '<li class="cf-outline-item" data-level="' + node.level + '" data-id="' + safeId + '">' +
+      row;
+    if (hasChildren) {
       html +=
-        "\n" +
-        indent +
-        '  <ul class="cf-outline-children">\n' +
-        node.children.map(renderOutlineNode).join("\n") +
-        "\n" +
-        indent +
-        "  </ul>";
+        '<ul class="cf-outline-children">' +
+        node.children.map(renderOutlineNode).join("") +
+        "</ul>";
     }
     html += "</li>";
     return html;
@@ -114,6 +121,49 @@
           postMessage({ command: "navigate", target });
         }
       });
+    });
+  }
+
+  const COLLAPSED_STORAGE_KEY = "cf-outline-collapsed";
+
+  function bindOutlineToggles() {
+    document.querySelectorAll(".cf-outline-chevron").forEach((el) => {
+      if (el.classList.contains("cf-outline-chevron--leaf")) return;
+      el.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const item = el.closest(".cf-outline-item");
+        if (!item) return;
+        item.classList.toggle("collapsed");
+        persistCollapsedState();
+      });
+    });
+  }
+
+  function persistCollapsedState() {
+    const ids = Array.from(document.querySelectorAll(".cf-outline-item.collapsed"))
+      .map((el) => el.getAttribute("data-id"))
+      .filter(Boolean);
+    try {
+      localStorage.setItem(COLLAPSED_STORAGE_KEY, JSON.stringify(ids));
+    } catch (_) {
+      // Ignore storage errors (e.g. when storage is disabled in this webview).
+    }
+  }
+
+  function applyCollapsedState() {
+    let saved;
+    try {
+      const raw = localStorage.getItem(COLLAPSED_STORAGE_KEY);
+      saved = raw ? JSON.parse(raw) : [];
+    } catch (_) {
+      return;
+    }
+    if (!Array.isArray(saved) || saved.length === 0) return;
+    const set = new Set(saved);
+    document.querySelectorAll(".cf-outline-item").forEach((el) => {
+      const id = el.getAttribute("data-id");
+      if (id && set.has(id)) el.classList.add("collapsed");
     });
   }
 

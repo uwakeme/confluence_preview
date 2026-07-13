@@ -166,9 +166,52 @@ html, body {
   margin: 0;
 }
 
+.cf-outline-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.cf-outline-chevron {
+  flex-shrink: 0;
+  width: 16px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--cf-fg);
+  opacity: 0.45;
+  user-select: none;
+  transition: opacity 0.12s ease;
+}
+
+.cf-outline-row:hover .cf-outline-chevron {
+  opacity: 0.95;
+}
+
+.cf-outline-chevron::before {
+  content: "\25B8"; /* ▸ */
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.cf-outline-item:not(.collapsed) > .cf-outline-row > .cf-outline-chevron::before {
+  transform: rotate(90deg);
+}
+
+.cf-outline-chevron--leaf {
+  visibility: hidden;
+  cursor: default;
+}
+
 .cf-outline-link {
   display: block;
-  padding: 4px 16px;
+  flex: 1;
+  min-width: 0;
+  padding: 3px 12px 3px 0;
   color: var(--cf-fg);
   text-decoration: none;
   border-left: 3px solid transparent;
@@ -179,7 +222,7 @@ html, body {
   text-overflow: ellipsis;
 }
 
-.cf-outline-link:hover {
+.cf-outline-row:hover .cf-outline-link {
   background: var(--cf-active-bg);
   color: var(--cf-active-fg);
 }
@@ -188,7 +231,42 @@ html, body {
   background: var(--cf-active-bg);
   color: var(--cf-active-fg);
   border-left-color: var(--cf-link);
+}
+
+.cf-outline-link[data-level="1"] {
+  font-size: 13.5px;
+  font-weight: 700;
+  padding-top: 6px;
+  padding-bottom: 4px;
+}
+.cf-outline-link[data-level="2"] {
+  font-size: 13px;
   font-weight: 600;
+}
+.cf-outline-link[data-level="3"] {
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.cf-outline-link[data-level="4"] {
+  font-size: 12.5px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+.cf-outline-link[data-level="5"] {
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+.cf-outline-link[data-level="6"] {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.cf-outline-item.collapsed > .cf-outline-children {
+  display: none;
 }
 
 .cf-outline-children {
