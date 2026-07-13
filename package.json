@@ -54,7 +54,7 @@
         "command": "confluence-previewer.openPreview",
         "title": "Confluence: Open Previewer",
         "category": "Confluence",
-        "icon": "$(open-previewer)"
+        "icon": "$(open-preview)"
       },
       {
         "command": "confluence-previewer.copyHtml",
