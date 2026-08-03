@@ -11,6 +11,20 @@ All notable changes to **Confluence Preview** are listed here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.1.2] - 2026-08-03
+
+### Changed
+
+#### Outline sidebar
+
+- Headings now render with level-specific typography: h1 is the largest and boldest, deeper levels get progressively smaller and lighter, and h5 is uppercase. The hierarchy of a document is visible at a glance.
+- Each heading now has a clickable chevron in front of it that collapses and expands its subtree, so long documents are easier to navigate.
+- Collapse state persists across document refreshes and reopening the file.
+- Leaf headings (with no children) keep an invisible placeholder so their text lines up with non-leaf siblings instead of drifting left.
+- The chevron rotates 90° when a subtree is open, giving a smooth open/close affordance.
+
 ## [0.1.0] - 2026-06-19
 
 First public release. We render Confluence Storage Format inside VS Code, fully client-side. No network calls.
