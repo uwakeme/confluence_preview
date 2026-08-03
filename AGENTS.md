@@ -49,6 +49,13 @@ Preview **Confluence Storage Format** (the XHTML behind Confluence's Source Edit
 - Push directly to `main` — no PR required (personal project, no reviewers)
 - Either HTTPS or SSH works; if one is blocked by the network, switch with `git remote set-url origin <other-url>`
 
+## Changelog
+
+- Every commit with a user-visible effect (UI change, new feature, behavior fix, macro support, etc.) must update `CHANGELOG.md` and `CHANGELOG.en.md` in the same commit. Unreleased work accumulates under an `## [Unreleased]` section at the top of both files; cut a versioned section + bump `package.json` when releasing.
+- Style: **user-perspective only**. Describe what the user can now see and do — not how it's implemented. No file names, function names, regex / CSS / TS details, refactor rationale, or internal naming. One bullet ≈ one observable change.
+- Follow [Keep a Changelog](https://keepachangelog.com/) section types: 新增 / 修复 / Changed / 弃用 / 移除 / 安全 (English: Added / Fixed / Changed / Deprecated / Removed / Security). Use only the ones that apply; don't invent new ones.
+- Purely internal commits (e.g. `chore: bump dep`, `docs: fix typo in AGENTS.md`, behavior-preserving refactor with no UX impact) can skip the changelog — but if there's *any* user-visible side effect, document it.
+
 ## Security
 
 - Never commit secrets — `.env` is in `.gitignore` (along with `node_modules/`, `dist/`, generated `*.bundle.mjs`)
