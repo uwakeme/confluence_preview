@@ -3,7 +3,7 @@
   "displayName": "Confluence Previewer",
   "description": "Preview Confluence Storage Format (Source Editor XHTML) as it appears in Confluence",
   "icon": "image/icon.png",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "publisher": "wake",
   "license": "MIT",
   "engines": {

@@ -20,7 +20,7 @@
 [![VS Code](https://img.shields.io/badge/VS%20Code-%5E1.75.0-007ACC?logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![离线](https://img.shields.io/badge/%E8%BF%90%E8%A1%8C-100%25%20%E7%A6%BB%E7%BA%BF-success)](#为什么需要)
-[![版本](https://img.shields.io/badge/version-0.1.2-orange)]()
+[![版本](https://img.shields.io/badge/version-0.2.0-orange)]()
 [![CI](https://github.com/uwakeme/confluence_preview/actions/workflows/ci.yml/badge.svg)](https://github.com/uwakeme/confluence_preview/actions/workflows/ci.yml)
 
 纯客户端的 VS Code 扩展。打开 `.confluence` 文件，渲染页坐在源码旁边实时刷新。不连 Confluence，不发网络请求，不埋点。

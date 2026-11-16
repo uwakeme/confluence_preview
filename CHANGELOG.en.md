@@ -13,6 +13,8 @@ and the project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-16
+
 ### Added
 
 #### Top banner
@@ -135,4 +137,5 @@ All user text is escaped via `sanitize.ts` before injection. The UI matches VS C
 
 Internal page / attachment links render as labeled placeholders, not real URLs (the extension has no Confluence host context). External `<img>` is blocked by CSP and shown as a placeholder. The preview is read-only; edit in Confluence's own source editor. Markdown export is best-effort; round-trip is not guaranteed.
 
+[0.2.0]: https://github.com/uwakeme/confluence_preview/releases/tag/v0.2.0
 [0.1.0]: https://github.com/uwakeme/confluence_preview/releases/tag/v0.1.0

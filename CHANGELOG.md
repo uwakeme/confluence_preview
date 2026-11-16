@@ -13,6 +13,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-16
+
 ### 新增
 
 #### 顶部 banner
@@ -135,4 +137,5 @@ CDATA 在解析前 base64 暂存，渲染时再逐字还原。`code` 宏里的�
 
 内部 page / attachment 链接是带标签的占位符，不是真实 URL（扩展没有 Confluence 主机上下文）。外部 `<img>` 被 CSP 拦了，也是占位符。预览只读，要改还是回 Confluence 自己的源码编辑器。Markdown 导出尽力而为，不保证可往返还原。
 
+[0.2.0]: https://github.com/uwakeme/confluence_preview/releases/tag/v0.2.0
 [0.1.0]: https://github.com/uwakeme/confluence_preview/releases/tag/v0.1.0
