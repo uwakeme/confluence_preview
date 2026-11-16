@@ -6,6 +6,10 @@
 
 <div align="center">
 
+<p align="center">
+  <img src="./image/banner.png" alt="Confluence Preview — Preview Confluence Storage Format inside VS Code" width="100%">
+</p>
+
 # Confluence Preview
 
 Preview Confluence Storage Format (XHTML) inside VS Code.
@@ -16,7 +20,7 @@ Preview Confluence Storage Format (XHTML) inside VS Code.
 [![VS Code](https://img.shields.io/badge/VS%20Code-%5E1.75.0-007ACC?logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Offline](https://img.shields.io/badge/runs-100%25%20offline-success)](#why)
-[![Version](https://img.shields.io/badge/version-0.1.0-orange)]()
+[![Version](https://img.shields.io/badge/version-0.1.2-orange)]()
 
 A fully client-side VS Code extension. Open a `.confluence` file and the rendered page sits next to the source, refreshing on every keystroke. No Confluence connection, no network calls, no telemetry.
 

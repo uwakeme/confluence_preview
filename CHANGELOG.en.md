@@ -13,6 +13,16 @@ and the project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+#### Top banner
+
+The README now opens with a dark banner image showing the project name, a one-line summary, and the tech stack tags.
+
+### Fixed
+
+- The version badge at the top of the README showed a stale version number. It now matches the released version.
+
 ## [0.1.2] - 2026-08-03
 
 ### Changed
