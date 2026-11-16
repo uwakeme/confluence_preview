@@ -10,7 +10,7 @@ import * as cheerio from "cheerio";
 import type { RenderContext } from "../elements";
 import { escapeAttr, escapeHtml } from "../sanitize";
 
-const EMOJI: Record<string, string> = {
+export const EMOJI: Record<string, string> = {
   smile: "😊",
   wink: "😉",
   laughing: "😂",
@@ -56,11 +56,14 @@ export function renderEmoticonMacro(
   $: cheerio.CheerioAPI,
   el: cheerio.Cheerio<any>,
   _ctx: RenderContext,
-  _params: Record<string, string>,
+  params: Record<string, string>,
   _bodyHtml: string,
   _rawCdata: string,
 ): string {
+  // Structured form carries the glyph name in a parameter; the inline
+  // <ac:emoticon ac:name="…"/> form carries it as an attribute.
   const raw = (
+    params["name"] ??
     el.attr("ac:name") ??
     el.attr("name") ??
     (el[0] as any).tagName?.replace(/^ac:/, "") ??

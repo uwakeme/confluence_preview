@@ -1,0 +1,13 @@
+{
+  "command.openPreview": "Confluence: 打开预览",
+  "command.copyHtml": "Confluence: 复制渲染后的 HTML",
+  "command.exportMarkdown": "Confluence: 导出为 Markdown",
+  "command.exportHtml": "Confluence: 导出独立 HTML 文件",
+  "command.refresh": "Confluence: 刷新预览",
+  "config.baseUrl": "Confluence 基地址（如 `https://confluence.example.com`）。设置后，带空间 key 的内部页面链接（`ri:page`）会解析为真实的 `/display/空间/标题` 链接，而不是离线占位符。",
+  "config.jiraBaseUrl": "Jira 基地址（如 `https://jira.example.com`）。用于没有 `baseurl` 参数的 `jira` 宏，把工单号变成真实链接。",
+  "config.localFiles": "把附件链接、`ac:image` 和相对路径的 `<img>` 解析为源码同目录下的本地文件。外部资源始终不加载（纯离线）。",
+  "config.refreshDebounce": "输入时预览刷新的防抖延迟（毫秒）。",
+  "config.outlineVisible": "打开预览时显示大纲侧边栏。也可以在预览顶栏随时切换。",
+  "config.enableForHtml": "同时为普通 `.html` 文件提供预览（默认关闭——本扩展面向 Confluence 存储格式）。"
+}

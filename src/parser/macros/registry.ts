@@ -5,7 +5,9 @@
 import * as cheerio from "cheerio";
 import type { RenderContext } from "../elements";
 import { renderChildren } from "../elements";
-import { extractCdata } from "../index";
+import { extractCdata, readMacroParams, richBody, plainBody } from "../source";
+import { escapeAttr, escapeHtml } from "../sanitize";
+import { buildPageUrl, sanitizeHref } from "../../links";
 
 import { renderCodeMacro } from "./code";
 import { renderTocMacro } from "./toc";
@@ -43,6 +45,7 @@ const REGISTRY: Record<string, MacroRenderer> = {
   code: renderCodeMacro,
   toc: renderTocMacro,
   "table-of-contents": renderTocMacro,
+  "table-of-content": renderTocMacro,
   panel: renderPanelMacro,
   note: renderNoteMacro,
   info: renderInfoMacro,
@@ -76,29 +79,18 @@ export function renderStructuredMacro(
   ctx: RenderContext,
 ): string {
   const name = el.attr("ac:name") ?? el.attr("name") ?? "unknown";
-  const params: Record<string, string> = {};
-  el.find("ac\\:parameter").each((_, p) => {
-    const pName = $(p).attr("ac:name") ?? $(p).attr("name");
-    if (pName) params[pName] = $(p).text();
-  });
+  ctx.macros.push(name.toLowerCase());
 
-  // Body: prefer rich-text-body, fall back to plain-text-body
-  let bodyHtml = "";
-  const richBody = el.find("ac\\:rich-text-body").first();
-  if (richBody.length > 0) {
-    bodyHtml = renderChildren($, richBody[0]!, ctx);
-  }
-
-  // Raw CDATA content (for code/noformat-style macros that need the
-  // exact source text including indentation and special characters).
-  const plainBody = el.find("ac\\:plain-text-body").first();
-  const rawCdata = plainBody.length > 0 ? extractCdata(plainBody) : "";
+  const params = readMacroParams($, el);
+  const rich = richBody($, el);
+  const bodyHtml = rich.length > 0 ? renderChildren($, rich[0]!, ctx) : "";
+  const rawCdata = plainBody($, el);
 
   return lookupMacro(name)($, el, ctx, params, bodyHtml, rawCdata);
 }
 
 /**
- * Inline macro handler: <ac:macro-name ac:name="..."/>
+ * Inline macro handler: <ac:emoticon ac:name="..."/>
  */
 export function renderInlineMacro(
   $: cheerio.CheerioAPI,
@@ -107,6 +99,7 @@ export function renderInlineMacro(
 ): string {
   const name = (el[0] as any).tagName?.toLowerCase() ?? "";
   const macroName = name.replace(/^ac:/, "");
+  ctx.macros.push(macroName);
   const renderer = lookupMacro(macroName);
   return renderer($, el, ctx, {}, renderChildren($, el[0]!, ctx), "");
 }
@@ -122,43 +115,73 @@ export function renderAcLink(
   el: cheerio.Cheerio<any>,
   ctx: RenderContext,
 ): string {
-  const page = el.find("ri\\:page").first();
+  const anchor = el.attr("ac:anchor") ?? "";
+  const linkBody = readLinkBody($, el, ctx);
+
+  const page = el.children("ri\\:page").first();
   if (page.length > 0) {
     const title = page.attr("ri:content-title") ?? page.attr("title") ?? "Page";
-    return `<a class="cf-link cf-page-link" href="#" title="Internal page (not resolvable offline)">${escapeText(
-      title,
-    )}</a>`;
+    const spaceKey = page.attr("ri:space-key");
+    const text = linkBody || escapeHtml(title);
+    const realUrl = buildPageUrl(ctx.options.baseUrl, spaceKey, title, anchor || undefined);
+    if (realUrl) {
+      return `<a class="cf-link cf-page-link" href="${escapeAttr(realUrl)}" target="_blank" rel="noopener">${text}</a>`;
+    }
+    const label = anchor ? `${title} §${anchor}` : title;
+    return `<a class="cf-link cf-page-link" href="#" title="${escapeAttr(label)} — internal page (set confluence-previewer.baseUrl to enable links)">${text}</a>`;
   }
 
-  const att = el.find("ri\\:attachment").first();
+  const att = el.children("ri\\:attachment").first();
   if (att.length > 0) {
     const filename = att.attr("ri:filename") ?? "attachment";
-    return `<a class="cf-link cf-attachment-link" href="#" title="Attachment (not resolvable offline)">📎 ${escapeText(
-      filename,
-    )}</a>`;
+    const text = linkBody || `📎 ${escapeHtml(filename)}`;
+    const local = ctx.options.resolveLocalFile?.(filename);
+    if (local) {
+      return `<a class="cf-link cf-attachment-link" href="#" data-attachment="${escapeAttr(filename)}" title="Open local attachment">${text}</a>`;
+    }
+    return `<a class="cf-link cf-attachment-link" href="#" title="Attachment (not resolvable offline)">${text}</a>`;
   }
 
-  const url = el.find("ri\\:url").first();
+  const url = el.children("ri\\:url").first();
   if (url.length > 0) {
-    const href = url.attr("ri:value") ?? "#";
-    const linkText = renderChildren($, el[0]!, ctx) || href;
-    return `<a class="cf-link" href="${escapeAttr(
-      href,
-    )}" target="_blank" rel="noopener">${linkText}</a>`;
+    const href = sanitizeHref(url.attr("ri:value") ?? "#");
+    const text = linkBody || escapeHtml(href);
+    return `<a class="cf-link" href="${escapeAttr(href)}" target="_blank" rel="noopener">${text}</a>`;
   }
 
-  const user = el.find("ri\\:user").first();
+  const user = el.children("ri\\:user").first();
   if (user.length > 0) {
-    const username = user.attr("ri:username") ?? "user";
-    return `<span class="cf-user-mention">@${escapeText(username)}</span>`;
+    const id =
+      user.attr("ri:username") ??
+      user.attr("ri:account-id") ??
+      user.attr("ri:userkey") ??
+      "user";
+    return `<span class="cf-user-mention" title="${escapeAttr(id)}">@user</span>`;
   }
 
-  return renderChildren($, el[0]!, ctx);
+  // Same-page anchor link: <ac:link ac:anchor="name">…</ac:link>
+  if (anchor) {
+    const text = linkBody || escapeHtml(anchor);
+    return `<a class="cf-link cf-anchor-link" href="#${escapeAttr(anchor)}">${text}</a>`;
+  }
+
+  return linkBody || renderChildren($, el[0]!, ctx);
 }
 
-function escapeText(s: string): string {
-  return s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
-}
-function escapeAttr(s: string): string {
-  return s.replace(/"/g, "&quot;");
+/** Custom link text: plain-text-link-body (CDATA) or link-body (rich). */
+function readLinkBody(
+  $: cheerio.CheerioAPI,
+  el: cheerio.Cheerio<any>,
+  ctx: RenderContext,
+): string {
+  const plain = el.children("ac\\:plain-text-link-body").first();
+  if (plain.length > 0) {
+    const text = extractCdata(plain).trim();
+    if (text) return escapeHtml(text);
+  }
+  const rich = el.children("ac\\:link-body").first();
+  if (rich.length > 0) {
+    return renderChildren($, rich[0]!, ctx);
+  }
+  return "";
 }

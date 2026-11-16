@@ -9,7 +9,7 @@ import { escapeHtml } from "../sanitize";
 export function fallbackMacro(
   $: cheerio.CheerioAPI,
   el: cheerio.Cheerio<any>,
-  _ctx: RenderContext,
+  ctx: RenderContext,
   _params: Record<string, string>,
   bodyHtml: string,
   rawCdata: string,
@@ -19,6 +19,7 @@ export function fallbackMacro(
     el.attr("name") ??
     (el[0] as any).tagName?.replace(/^ac:/, "") ??
     "unknown";
+  ctx.warnings.push(`Unsupported macro: ${name}`);
 
   if (bodyHtml && bodyHtml.trim().length > 0) {
     return (

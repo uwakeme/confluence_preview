@@ -24,7 +24,6 @@ async function copyWebviewAssets() {
   if (!existsSync("dist/media")) {
     await mkdir("dist/media", { recursive: true });
   }
-  await copyFile("src/media/preview.html", "dist/media/preview.html");
   await copyFile("src/media/style.css", "dist/media/style.css");
   await copyFile("src/media/script.js", "dist/media/script.js");
   await copyFile("src/media/highlight.min.js", "dist/media/highlight.min.js");

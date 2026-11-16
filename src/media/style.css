@@ -150,7 +150,6 @@ html, body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--cf-fg);
-  opacity: 0.6;
   background: var(--cf-bg-soft);
   border-bottom: 1px solid var(--cf-border);
   z-index: 1;
@@ -289,7 +288,6 @@ html, body {
   overflow-y: auto;
   padding: 32px 48px;
   font-size: 14px;
-  scroll-behavior: smooth;
 }
 
 .cf-empty {
@@ -589,6 +587,210 @@ html, body {
   font-size: 12px;
 }
 
+/* ---------- Inline TOC (rendered from the outline) ---------- */
+
+.cf-toc {
+  margin: 12px 0;
+  padding: 10px 16px;
+  background: var(--cf-bg-soft);
+  border: 1px solid var(--cf-border);
+  border-radius: 4px;
+}
+
+.cf-toc-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.cf-toc-list .cf-toc-list {
+  padding-left: 18px;
+  border-left: 1px solid var(--cf-border);
+  margin-left: 4px;
+}
+
+.cf-toc-list li {
+  margin: 2px 0;
+  font-size: 13px;
+}
+
+.cf-toc-empty {
+  font-style: italic;
+  opacity: 0.6;
+  font-size: 12px;
+}
+
+/* ---------- Task list ---------- */
+
+.cf-task-list {
+  list-style: none;
+  padding-left: 4px;
+  margin: 8px 0;
+}
+
+.cf-task {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.cf-task-checkbox {
+  margin-top: 4px;
+  accent-color: var(--cf-link);
+  flex-shrink: 0;
+}
+
+.cf-task-body {
+  min-width: 0;
+}
+
+.cf-task-body > *:first-child { margin-top: 0; }
+.cf-task-body > *:last-child { margin-bottom: 0; }
+
+/* ---------- Modern layout (ac:layout) ---------- */
+
+.cf-layout {
+  margin: 12px 0;
+}
+
+.cf-layout-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.cf-layout-cell {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.cf-layout-section[data-type="single"] .cf-layout-cell { flex-basis: 100%; }
+.cf-layout-section[data-type="two_left_sidebar"] .cf-layout-cell:first-child { flex: 0 0 30%; }
+.cf-layout-section[data-type="two_right_sidebar"] .cf-layout-cell:last-child { flex: 0 0 30%; }
+.cf-layout-section[data-type="three_with_sidebars"] .cf-layout-cell:first-child,
+.cf-layout-section[data-type="three_with_sidebars"] .cf-layout-cell:last-child { flex: 0 0 22%; }
+
+@media (max-width: 640px) {
+  .cf-layout-section .cf-layout-cell { flex-basis: 100% !important; }
+}
+
+/* ---------- Code line numbers ---------- */
+
+.cf-code-lined {
+  display: flex;
+  align-items: stretch;
+}
+
+.cf-code-gutter {
+  margin: 0;
+  padding: 12px 8px 12px 12px;
+  background: var(--cf-code-bg);
+  border-right: 1px solid var(--cf-border);
+  color: var(--vscode-editorLineNumber-foreground, #999);
+  font-family: var(--cf-font-mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  text-align: right;
+  white-space: pre;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.cf-code-lined .cf-code-pre {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- Images ---------- */
+
+.cf-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+.cf-image-bordered {
+  border: 1px solid var(--cf-border);
+  padding: 2px;
+}
+
+.cf-figure {
+  margin: 12px 0;
+}
+
+.cf-figcaption {
+  margin-top: 6px;
+  font-size: 12px;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+.cf-image-dims {
+  opacity: 0.6;
+  font-size: 11px;
+}
+
+/* ---------- Table cell highlight colors (Confluence palette) ---------- */
+
+.cf-table .highlight-grey   { background-color: #f5f5f5; }
+.cf-table .highlight-green  { background-color: #e3fcef; }
+.cf-table .highlight-red    { background-color: #ffebe6; }
+.cf-table .highlight-blue   { background-color: #deebff; }
+.cf-table .highlight-yellow { background-color: #fffae6; }
+.cf-table .highlight-purple { background-color: #eae6ff; }
+
+body.vscode-dark .cf-table .highlight-grey   { background-color: #3a3a3a; }
+body.vscode-dark .cf-table .highlight-green  { background-color: #1f3d2a; }
+body.vscode-dark .cf-table .highlight-red    { background-color: #4a2620; }
+body.vscode-dark .cf-table .highlight-blue   { background-color: #1f3350; }
+body.vscode-dark .cf-table .highlight-yellow { background-color: #4a4520; }
+body.vscode-dark .cf-table .highlight-purple { background-color: #332a4d; }
+
+/* ---------- Misc inline ---------- */
+
+.cf-jira-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--cf-bg-soft);
+  border: 1px solid var(--cf-border);
+  font-size: 0.9em;
+}
+
+.cf-excerpt-included {
+  border-left-style: solid;
+}
+
+/* ---------- Header button ---------- */
+
+.cf-header-btn {
+  background: transparent;
+  border: 1px solid var(--cf-border);
+  border-radius: 3px;
+  color: var(--cf-fg);
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.cf-header-btn:hover {
+  background: var(--cf-active-bg);
+  color: var(--cf-active-fg);
+}
+
+#app.outline-hidden .cf-outline-pane {
+  display: none;
+}
+
+/* ---------- Standalone export ---------- */
+
+.cf-standalone .cf-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 /* ---------- Section / Column layout ---------- */
 
 .cf-section {
@@ -771,3 +973,13 @@ body.vscode-dark .hljs-title, body.vscode-dark .hljs-section, body.vscode-dark .
 body.vscode-dark .hljs-attribute, body.vscode-dark .hljs-name, body.vscode-dark .hljs-tag { color: #9cdcfe; }
 body.vscode-dark .hljs-built_in, body.vscode-dark .hljs-type { color: #4ec9b0; }
 body.vscode-dark .hljs-variable, body.vscode-dark .hljs-template-variable, body.vscode-dark .hljs-regexp { color: #d16969; }
+
+/* High-contrast light reuses the light syntax palette */
+body.vscode-high-contrast-light .hljs-comment, body.vscode-high-contrast-light .hljs-quote { color: #998; font-style: italic; }
+body.vscode-high-contrast-light .hljs-keyword, body.vscode-high-contrast-light .hljs-selector-tag, body.vscode-high-contrast-light .hljs-subst { color: #333; font-weight: 700; }
+body.vscode-high-contrast-light .hljs-string, body.vscode-high-contrast-light .hljs-doctag { color: #d14; }
+body.vscode-high-contrast-light .hljs-number, body.vscode-high-contrast-light .hljs-literal { color: #008080; }
+body.vscode-high-contrast-light .hljs-title, body.vscode-high-contrast-light .hljs-section, body.vscode-high-contrast-light .hljs-selector-id { color: #900; font-weight: 700; }
+body.vscode-high-contrast-light .hljs-attribute, body.vscode-high-contrast-light .hljs-name, body.vscode-high-contrast-light .hljs-tag { color: #000080; }
+body.vscode-high-contrast-light .hljs-built_in, body.vscode-high-contrast-light .hljs-type { color: #458; }
+body.vscode-high-contrast-light .hljs-variable, body.vscode-high-contrast-light .hljs-template-variable, body.vscode-high-contrast-light .hljs-regexp { color: #008080; }

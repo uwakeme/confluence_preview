@@ -1,0 +1,13 @@
+{
+  "command.openPreview": "Confluence: Open Preview",
+  "command.copyHtml": "Confluence: Copy Rendered HTML",
+  "command.exportMarkdown": "Confluence: Export to Markdown",
+  "command.exportHtml": "Confluence: Export Standalone HTML",
+  "command.refresh": "Confluence: Refresh Preview",
+  "config.baseUrl": "Confluence base URL (e.g. `https://confluence.example.com`). When set, internal page links (`ri:page` with a space key) resolve to real `/display/SPACE/Title` URLs instead of offline placeholders.",
+  "config.jiraBaseUrl": "Jira base URL (e.g. `https://jira.example.com`). Used by `jira` macros that carry no `baseurl` parameter, turning issue keys into real links.",
+  "config.localFiles": "Resolve attachment links, `ac:image` and relative `<img>` paths against files next to the source document. External resources are never loaded (offline-only).",
+  "config.refreshDebounce": "Delay in milliseconds before the preview refreshes while typing.",
+  "config.outlineVisible": "Show the outline sidebar when the preview opens. Can also be toggled from the preview header.",
+  "config.enableForHtml": "Also offer the preview for plain `.html` files (off by default — the preview targets Confluence storage format)."
+}

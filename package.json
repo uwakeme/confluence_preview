@@ -10,7 +10,10 @@
     "vscode": "^1.75.0"
   },
   "categories": [
-    "Other"
+    "Visualization"
+  ],
+  "extensionKind": [
+    "workspace"
   ],
   "repository": {
     "type": "git",
@@ -29,8 +32,7 @@
   ],
   "activationEvents": [
     "onLanguage:confluence",
-    "onLanguage:html",
-    "onCommand:confluence-previewer.openPreview"
+    "onLanguage:html"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -52,23 +54,28 @@
     "commands": [
       {
         "command": "confluence-previewer.openPreview",
-        "title": "Confluence: Open Previewer",
+        "title": "%command.openPreview%",
         "category": "Confluence",
         "icon": "$(open-preview)"
       },
       {
         "command": "confluence-previewer.copyHtml",
-        "title": "Confluence: Copy Rendered HTML",
+        "title": "%command.copyHtml%",
         "category": "Confluence"
       },
       {
         "command": "confluence-previewer.exportMarkdown",
-        "title": "Confluence: Export to Markdown",
+        "title": "%command.exportMarkdown%",
+        "category": "Confluence"
+      },
+      {
+        "command": "confluence-previewer.exportHtml",
+        "title": "%command.exportHtml%",
         "category": "Confluence"
       },
       {
         "command": "confluence-previewer.refresh",
-        "title": "Confluence: Refresh Previewer",
+        "title": "%command.refresh%",
         "category": "Confluence",
         "icon": "$(refresh)"
       }
@@ -77,22 +84,74 @@
       "editor/title": [
         {
           "command": "confluence-previewer.openPreview",
-          "when": "editorLangId == confluence || editorLangId == html",
+          "when": "editorLangId == confluence || (editorLangId == html && confluence-previewer.enableForHtml)",
+          "group": "navigation"
+        },
+        {
+          "command": "confluence-previewer.refresh",
+          "when": "confluence-previewer.previewActive && (editorLangId == confluence || (editorLangId == html && confluence-previewer.enableForHtml))",
           "group": "navigation"
         }
       ],
-      "commandPalette": [
+      "editor/context": [
         {
-          "command": "confluence-previewer.refresh",
-          "when": "false"
+          "command": "confluence-previewer.openPreview",
+          "when": "editorLangId == confluence || (editorLangId == html && confluence-previewer.enableForHtml)",
+          "group": "confluence@1"
         }
       ]
+    },
+    "keybindings": [
+      {
+        "command": "confluence-previewer.openPreview",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v",
+        "when": "editorLangId == confluence || (editorLangId == html && confluence-previewer.enableForHtml)"
+      }
+    ],
+    "configuration": {
+      "title": "Confluence Previewer",
+      "properties": {
+        "confluence-previewer.baseUrl": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%config.baseUrl%"
+        },
+        "confluence-previewer.jiraBaseUrl": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%config.jiraBaseUrl%"
+        },
+        "confluence-previewer.localFiles": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%config.localFiles%"
+        },
+        "confluence-previewer.refreshDebounce": {
+          "type": "number",
+          "default": 250,
+          "minimum": 0,
+          "maximum": 5000,
+          "markdownDescription": "%config.refreshDebounce%"
+        },
+        "confluence-previewer.outlineVisible": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%config.outlineVisible%"
+        },
+        "confluence-previewer.enableForHtml": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "%config.enableForHtml%"
+        }
+      }
     }
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
     "build": "node esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch",
+    "pretest": "esbuild src/parser/index.ts --bundle --platform=node --format=esm --outfile=tests/parser.bundle.mjs --log-level=warning",
     "test": "node --test \"tests/*.test.mjs\"",
     "package": "vsce package",
     "publish": "vsce publish"

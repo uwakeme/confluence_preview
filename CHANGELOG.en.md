@@ -19,9 +19,69 @@ and the project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 The README now opens with a dark banner image showing the project name, a one-line summary, and the tech stack tags.
 
+#### Preview and export
+
+- New command "Confluence: Export Standalone HTML": saves a single HTML file with styles and syntax highlighting inlined — opens in any browser and follows the system light/dark theme.
+- Keyboard shortcut `Ctrl+Shift+V` (`Cmd+Shift+V` on macOS) opens the preview; the editor context menu offers it too.
+- A refresh button appears in the editor title bar while a preview is open; "Refresh Preview" is back in the Command Palette.
+- Scrolling the editor moves the preview to the matching section; double-clicking a preview heading jumps back to the source.
+- The preview survives a VS Code window reload — no need to reopen it.
+- The outline sidebar can be hidden/shown anytime from the preview header, and your choice is remembered.
+- UI strings are available in English and Chinese, following the VS Code display language.
+
+#### Content rendering
+
+- Images: `ac:image` attachments and relative `<img>` paths render directly when the file sits next to the source, with dimensions, borders and captions; local attachment links open on click.
+- Task lists: `ac:task-list` renders as a checklist with completion state.
+- Modern page layouts: Confluence Cloud `ac:layout` (equal columns, three columns, left/right sidebars) renders correctly and wraps on narrow screens.
+- In-page table of contents: the `toc` macro now renders in the document body, with level ranges and flat/tree styles.
+- Same-page excerpt includes: `excerpt-include` expands excerpts defined in the same document, even when the definition comes later.
+- Code line numbers: the `linenumbers` and `firstline` parameters now work, numbering from the requested line.
+- Table upgrades: cell background highlights, column widths, alignment and merged cells all render correctly.
+- Colored text: safe inline styles (color, background, alignment) are preserved.
+- Custom link text: plain-text and rich link bodies on `ac:link` render correctly.
+
+#### Settings
+
+- `baseUrl`: set your Confluence URL and internal page links become real links.
+- `jiraBaseUrl`: set your Jira URL and issue keys become real links.
+- `localFiles`: toggle local attachment/image resolution.
+- `refreshDebounce`: adjustable refresh delay.
+- `outlineVisible`: default outline visibility.
+- `enableForHtml`: opt in to previewing plain `.html` files (off by default).
+
 ### Fixed
 
+- Text following self-closing tags (`<ri:page/>`, emoticons, …) is no longer swallowed.
+- Nested macro parameters no longer leak into the outer macro: a panel title is no longer overwritten by an inner code title.
+- Duplicate headings get distinct anchors, so outline jumps land on the right section.
+- Decoy headings inside code blocks and comments no longer appear in the outline.
+- CDATA-wrapped parameters and code content are no longer lost.
+- Entity text (`&amp;` etc.) no longer shows up double-escaped.
+- `status` macro colors, titles and the subtle variant now work.
+- `jira` macros without a baseurl render a badge instead of a dead link.
+- `user-mention` supports the newer account-id parameter and no longer renders blank.
+- `anchor` macros accept legacy parameter formats.
+- Refreshing keeps your reading position and expanded sections instead of resetting them.
+- The outline highlight correctly tracks scrolling.
+- Image placeholders for missing attachments show the right dimensions.
+- Structured `emoticon` macros read their name parameter correctly.
 - The version badge at the top of the README showed a stale version number. It now matches the released version.
+
+### Changed
+
+- Markdown export rewritten: tables (with alignment and escaping), task lists, nested lists, code fences, details blocks and macro conversions stay much closer to the original structure.
+- Command names unified to "Confluence: Open Preview / Refresh Preview / Copy Rendered HTML / Export to Markdown".
+- Unknown macros now raise a warning count in the preview header.
+- Plain `.html` files are no longer taken over by default — opt in via the setting.
+
+### Security
+
+- Malicious style injection (`url()`, `expression()`, …) is blocked by an allowlist.
+- `javascript:` / `data:` / `vbscript:` links are neutralized.
+- External images are never loaded; the webview Content Security Policy is tighter.
+- Local attachment resolution is confined to the source file's directory — no reading outside it.
+- External links pass a protocol allowlist before opening.
 
 ## [0.1.2] - 2026-08-03
 

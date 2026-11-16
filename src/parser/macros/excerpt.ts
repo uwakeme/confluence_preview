@@ -1,22 +1,24 @@
 /**
  * <ac:structured-macro ac:name="excerpt"> | "excerpt-include"
  *
- * excerpt: defines a reusable snippet.
- * excerpt-include: pulls an excerpt from another page (offline → placeholder).
+ * excerpt: defines a reusable snippet (registered for same-page includes).
+ * excerpt-include: pulls an excerpt. Same-document excerpts are resolved
+ * in a second pass; cross-page references stay placeholders (offline).
  */
 
 import * as cheerio from "cheerio";
 import type { RenderContext } from "../elements";
-import { escapeHtml } from "../sanitize";
 
 export function renderExcerptMacro(
   $: cheerio.CheerioAPI,
   _el: cheerio.Cheerio<any>,
-  _ctx: RenderContext,
+  ctx: RenderContext,
   params: Record<string, string>,
   bodyHtml: string,
   _rawCdata: string,
 ): string {
+  const name = (params["name"] ?? "").trim() || "default";
+  ctx.excerpts.set(name, bodyHtml);
   const hidden = isTruthy(params["hidden"]);
   if (hidden) {
     return `<aside class="cf-excerpt cf-excerpt-hidden">Excerpt (hidden)<div class="cf-excerpt-body">${bodyHtml}</div></aside>`;
@@ -26,16 +28,18 @@ export function renderExcerptMacro(
 
 export function renderExcerptIncludeMacro(
   $: cheerio.CheerioAPI,
-  _el: cheerio.Cheerio<any>,
-  _ctx: RenderContext,
+  el: cheerio.Cheerio<any>,
+  ctx: RenderContext,
   params: Record<string, string>,
   _bodyHtml: string,
   _rawCdata: string,
 ): string {
-  const ref = params["name"] ?? params["ref"] ?? "unknown";
-  return `<aside class="cf-excerpt cf-excerpt-include"><div class="cf-excerpt-label">Excerpt from “${escapeHtml(
-    ref,
-  )}”</div><div class="cf-excerpt-body">— not resolvable offline —</div></aside>`;
+  const name = (params["name"] ?? params["ref"] ?? "").trim() || "default";
+  const page = el.children("ri\\:page").first();
+  const crossPage = page.length > 0 && !!page.attr("ri:content-title");
+  const idx = ctx.excerptIncludes.length;
+  ctx.excerptIncludes.push({ name, crossPage });
+  return `<div class="cf-excerpt-include" data-excerpt-idx="${idx}"></div>`;
 }
 
 function isTruthy(v: string | undefined): boolean {

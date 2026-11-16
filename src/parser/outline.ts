@@ -2,7 +2,9 @@
  * Outline (table-of-contents) extraction and rendering.
  *
  * The outline is computed during parsing by walking the same node tree that
- * produces the rendered HTML, so anchors stay consistent.
+ * produces the rendered HTML, so anchors stay consistent. Each node also
+ * records its byte offset in the original source so the extension can
+ * reveal the matching editor position.
  */
 
 import type { Cheerio } from "cheerio";
@@ -13,6 +15,8 @@ export interface OutlineNode {
   level: number; // 1..6
   text: string;
   children: OutlineNode[];
+  /** Offset of the heading tag in the original source, when locatable. */
+  sourceOffset?: number;
 }
 
 interface MutableOutlineNode {
@@ -20,6 +24,7 @@ interface MutableOutlineNode {
   level: number;
   text: string;
   children: MutableOutlineNode[];
+  sourceOffset?: number;
 }
 
 /**
@@ -43,50 +48,51 @@ function insertOutlineNode(
 }
 
 /**
- * Render a single outline node as <li><a>…</a><ul>…</ul></li>.
+ * Blank out regions whose text content must not be mistaken for headings:
+ * comments, CDATA, script/style bodies, macro parameters and plain-text
+ * bodies. Replacement preserves length so offsets stay valid.
  */
-function renderOutlineNode(node: OutlineNode): string {
-  const indent = "  ".repeat(node.level);
-  const text = escapeText(node.text);
-  let html = `${indent}<li><a class="outline-link" href="#${escapeAttr(node.id)}" data-target="${escapeAttr(node.id)}">${text}</a>`;
-  if (node.children.length > 0) {
-    html += `\n${indent}  <ul class="outline-children">\n${node.children
-      .map(renderOutlineNode)
-      .join("\n")}\n${indent}  </ul>`;
-  }
-  html += `</li>`;
-  return html;
-}
-
-export function renderOutline(nodes: OutlineNode[]): string {
-  if (nodes.length === 0) return "";
-  return `<ul class="outline-root">\n${nodes.map(renderOutlineNode).join("\n")}\n</ul>`;
+function maskNonHeadingRegions(source: string): string {
+  const blank = (m: string) => " ".repeat(m.length);
+  return source
+    .replace(/<!--[\s\S]*?-->/g, blank)
+    .replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, blank)
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, blank)
+    .replace(/<ac:parameter\b[^>]*>[\s\S]*?<\/ac:parameter\s*>/gi, blank)
+    .replace(/<ac:plain-text-body\b[^>]*>[\s\S]*?<\/ac:plain-text-body\s*>/gi, blank);
 }
 
 /**
  * Helper used inside the recursive renderer: collect headings from cheerio nodes.
  *
- * We pass the same cheerio element we already render so heading text matches
- * what the user sees.
+ * Ids are `h-<slug>-<n>` where n counts occurrences of the same slug, so
+ * they are unique AND stable while unrelated parts of the document change.
  */
-export function makeOutlineCollector() {
+export function makeOutlineCollector(source: string) {
   const root: MutableOutlineNode[] = [];
+  const flat: MutableOutlineNode[] = [];
+  const slugCounts = new Map<string, number>();
   return {
-    collect(level: number, el: Cheerio<any>, text: string): string {
-      const id = `h-${slugify(text)}-${root.length + 1}`;
+    collect(level: number, _el: Cheerio<any>, text: string): string {
+      const slug = slugify(text);
+      const n = (slugCounts.get(slug) ?? 0) + 1;
+      slugCounts.set(slug, n);
+      const id = `h-${slug}-${n}`;
       const node: MutableOutlineNode = { id, level, text, children: [] };
       insertOutlineNode(root, node);
+      flat.push(node);
       return id;
     },
     finalize(): OutlineNode[] {
+      const masked = maskNonHeadingRegions(source);
+      const re = /<h[1-6](?:\s[^>]*)?\/?>/gi;
+      let m: RegExpExecArray | null;
+      let i = 0;
+      while ((m = re.exec(masked)) !== null && i < flat.length) {
+        flat[i]!.sourceOffset = m.index;
+        i++;
+      }
       return root as OutlineNode[];
     },
   };
-}
-
-function escapeText(s: string): string {
-  return s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]!);
-}
-function escapeAttr(s: string): string {
-  return s.replace(/"/g, "&quot;");
 }

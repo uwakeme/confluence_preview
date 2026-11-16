@@ -6,6 +6,7 @@ import * as cheerio from "cheerio";
 import type { RenderContext } from "../elements";
 import { escapeAttr, escapeHtml } from "../sanitize";
 import { renderChildren } from "../elements";
+import { sanitizeHref } from "../../links";
 
 export function renderLinkMacro(
   $: cheerio.CheerioAPI,
@@ -16,7 +17,7 @@ export function renderLinkMacro(
   rawCdata: string,
 ): string {
   // Prefer rich-text-body link text, then plain-text-body CDATA, then params.
-  const rich = el.find("ac\\:rich-text-body").first();
+  const rich = el.children("ac\\:rich-text-body").first();
   let linkText = "";
   if (rich.length > 0) {
     linkText = renderChildren($, rich[0]!, ctx);
@@ -25,7 +26,7 @@ export function renderLinkMacro(
   }
   if (!linkText) linkText = params["anchor"] ?? params["url"] ?? "link";
 
-  const href = params["url"] ?? params["href"] ?? "#";
+  const href = sanitizeHref(params["url"] ?? params["href"] ?? "#");
   return `<a class="cf-link cf-macro-link" href="${escapeAttr(
     href,
   )}" target="_blank" rel="noopener">${linkText}</a>`;

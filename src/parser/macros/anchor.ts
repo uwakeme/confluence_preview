@@ -1,5 +1,8 @@
 /**
  * <ac:structured-macro ac:name="anchor"> — anchor target.
+ *
+ * The anchor name arrives as `anchor-name`, `anchor`, or an unnamed
+ * parameter depending on the Confluence version.
  */
 
 import * as cheerio from "cheerio";
@@ -14,6 +17,12 @@ export function renderAnchorMacro(
   _bodyHtml: string,
   _rawCdata: string,
 ): string {
-  const name = params["anchor"] ?? "_self";
+  const name = (
+    params["anchor-name"] ??
+    params["anchor"] ??
+    params[""] ??
+    ""
+  ).trim();
+  if (!name) return "";
   return `<span id="${escapeAttr(name)}" class="cf-anchor"></span>`;
 }

@@ -34,7 +34,10 @@ export function renderCodeMacro(
   const language = LANG_ALIASES[rawLang] ?? (rawLang || "plaintext");
   const title = params["title"] ?? params["caption"];
   const collapse = isTruthy(params["collapse"]);
-  const linenumbers = isTruthy(params["linenumbers"] ?? params["firstline"]);
+  const linenumbers = isTruthy(params["linenumbers"]);
+  const firstlineRaw = parseInt(params["firstline"] ?? "1", 10);
+  const firstline = Number.isFinite(firstlineRaw) && firstlineRaw > 0 ? firstlineRaw : 1;
+  const lineAttrs = ` data-linenumbers="${linenumbers ? "1" : "0"}" data-firstline="${firstline}"`;
 
   // rawCdata is the original CDATA text — preserve indentation.
   let codeText = rawCdata;
@@ -49,7 +52,7 @@ export function renderCodeMacro(
       }</summary>` +
       `<pre class="cf-code-pre"><code class="language-${escapeAttr(
         language,
-      )} hljs" data-linenumbers="${linenumbers ? "1" : "0"}">${escapeHtml(codeText)}</code></pre>` +
+      )} hljs"${lineAttrs}>${escapeHtml(codeText)}</code></pre>` +
       `</details>`
     );
   }
@@ -61,7 +64,7 @@ export function renderCodeMacro(
     `<div class="cf-code">${titleHtml}` +
     `<pre class="cf-code-pre"><code class="language-${escapeAttr(
       language,
-    )} hljs" data-linenumbers="${linenumbers ? "1" : "0"}">${escapeHtml(codeText)}</code></pre>` +
+    )} hljs"${lineAttrs}>${escapeHtml(codeText)}</code></pre>` +
     `</div>`
   );
 }

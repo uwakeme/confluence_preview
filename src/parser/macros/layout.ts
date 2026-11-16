@@ -7,6 +7,7 @@
 
 import * as cheerio from "cheerio";
 import type { RenderContext } from "../elements";
+import { escapeAttr, isCssLength } from "../sanitize";
 
 export function renderSectionMacro(
   $: cheerio.CheerioAPI,
@@ -27,7 +28,8 @@ export function renderColumnMacro(
   bodyHtml: string,
   _rawCdata: string,
 ): string {
-  const width = params["width"] ?? "";
-  const style = width ? ` style="flex: ${width}"` : "";
+  const width = (params["width"] ?? "").trim();
+  const style =
+    width && isCssLength(width) ? ` style="flex: 1 1 ${escapeAttr(width)}"` : "";
   return `<div class="cf-column"${style}>${bodyHtml}</div>`;
 }

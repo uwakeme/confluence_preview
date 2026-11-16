@@ -349,5 +349,93 @@ ORDER BY name ASC;]]></ac:plain-text-body>
   </tbody>
 </table>
 
-<h1>十一、结尾</h1>
+<h1>十一、现代 Cloud 格式</h1>
+<h2>11.1 页面布局 (ac:layout)</h2>
+<ac:layout>
+  <ac:layout-section ac:type="two_equal">
+    <ac:layout-cell><p>左栏：two_equal 等宽布局。</p></ac:layout-cell>
+    <ac:layout-cell><p>右栏：窄屏自动换行。</p></ac:layout-cell>
+  </ac:layout-section>
+  <ac:layout-section ac:type="two_left_sidebar">
+    <ac:layout-cell><p>侧边栏</p></ac:layout-cell>
+    <ac:layout-cell><p>主内容区</p></ac:layout-cell>
+  </ac:layout-section>
+</ac:layout>
+
+<h2>11.2 任务列表 (ac:task-list)</h2>
+<ac:task-list>
+  <ac:task><ac:task-id>1</ac:task-id><ac:task-status>complete</ac:task-status><ac:task-body>已完成的任务</ac:task-body></ac:task>
+  <ac:task><ac:task-id>2</ac:task-id><ac:task-status>incomplete</ac:task-status><ac:task-body>待办任务，支持 <strong>富文本</strong></ac:task-body></ac:task>
+</ac:task-list>
+
+<h2>11.3 图片 (ac:image)</h2>
+<p>本地附件（与源码同目录的 sample-diagram.svg）：</p>
+<ac:image ac:alt="示例图" ac:width="320" ac:border="true">
+  <ri:attachment ri:filename="sample-diagram.svg"/>
+  <ac:caption>图 1：本地附件图片与说明文字</ac:caption>
+</ac:image>
+<p>缺失附件与外部图片显示为占位符：</p>
+<ac:image ac:width="640" ac:height="480"><ri:attachment ri:filename="not-here.png"/></ac:image>
+<ac:image><ri:url ri:value="https://example.com/remote.png"/></ac:image>
+
+<h1>十二、样式与表格增强</h1>
+<h2>12.1 彩色文本</h2>
+<p><span style="color: #d04437">红色</span>、<span style="color: #14892c">绿色</span>、<span style="background-color: #f6c342">高亮背景</span>、<span style="text-decoration: underline">下划线</span>。</p>
+<p style="text-align: center">居中对齐的段落。</p>
+<h2>12.2 表格高亮与列宽</h2>
+<table>
+  <colgroup><col width="120px"/><col/></colgroup>
+  <tbody>
+    <tr><th scope="col">键</th><th scope="col">值</th></tr>
+    <tr><td data-highlight-colour="#e3fcef">高亮单元格</td><td>data-highlight-colour</td></tr>
+    <tr><td style="text-align: right">右对齐</td><td>text-align</td></tr>
+  </tbody>
+</table>
+<h2>12.3 有序列表起始编号</h2>
+<ol start="5"><li>第五项</li><li>第六项</li></ol>
+
+<h1>十三、宏参数与链接进阶</h1>
+<h2>13.1 嵌套宏与 CDATA 参数</h2>
+<ac:structured-macro ac:name="panel">
+  <ac:parameter ac:name="title"><![CDATA[外层面板 <参数>]]></ac:parameter>
+  <ac:rich-text-body>
+    <ac:structured-macro ac:name="code">
+      <ac:parameter ac:name="title">内层代码</ac:parameter>
+      <ac:parameter ac:name="language">bash</ac:parameter>
+      <ac:plain-text-body><![CDATA[echo "nested"]]></ac:plain-text-body>
+    </ac:structured-macro>
+  </ac:rich-text-body>
+</ac:structured-macro>
+<h2>13.2 行号与起始行</h2>
+<ac:structured-macro ac:name="code">
+  <ac:parameter ac:name="language">python</ac:parameter>
+  <ac:parameter ac:name="linenumbers">true</ac:parameter>
+  <ac:parameter ac:name="firstline">42</ac:parameter>
+  <ac:plain-text-body><![CDATA[def hello():
+    print("line numbers start at 42")]]></ac:plain-text-body>
+</ac:structured-macro>
+<h2>13.3 自定义链接文字与表情</h2>
+<p>
+  <ac:link><ri:page ri:content-title="领域模型修改"/><ac:plain-text-link-body><![CDATA[自定义链接文字]]></ac:plain-text-link-body></ac:link>
+  ，
+  <ac:link><ri:page ri:content-title="领域模型修改"/><ac:link-body><strong>富文本</strong>链接</ac:link-body></ac:link>
+  ，
+  <ac:link><ri:attachment ri:filename="sample-diagram.svg"/></ac:link>
+</p>
+<p>表情：<ac:emoticon ac:name="smile"/> <ac:emoticon ac:name="thumbs_up"/> 后面还有文字。</p>
+<h2>13.4 页内目录 (toc)</h2>
+<ac:structured-macro ac:name="toc">
+  <ac:parameter ac:name="maxLevel">2</ac:parameter>
+  <ac:parameter ac:name="type">flat</ac:parameter>
+</ac:structured-macro>
+<h2>13.5 同页摘录引用</h2>
+<ac:structured-macro ac:name="excerpt">
+  <ac:parameter ac:name="name">reusable</ac:parameter>
+  <ac:rich-text-body><p>这段摘录被下方引用。</p></ac:rich-text-body>
+</ac:structured-macro>
+<ac:structured-macro ac:name="excerpt-include">
+  <ac:parameter ac:name="name">reusable</ac:parameter>
+</ac:structured-macro>
+
+<h1>十四、结尾</h1>
 <p>如果以上所有元素都正确渲染，说明预览插件的核心功能已经验证通过。</p>

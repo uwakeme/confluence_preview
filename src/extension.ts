@@ -3,7 +3,6 @@
  */
 
 import * as vscode from "vscode";
-import { parseConfluence } from "./parser";
 import { PreviewPanel } from "./previewPanel";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -26,6 +25,19 @@ export function activate(context: vscode.ExtensionContext) {
       "confluence-previewer.exportMarkdown",
       () => previewPanel.exportMarkdown(),
     ),
+    vscode.commands.registerCommand(
+      "confluence-previewer.exportHtml",
+      () => previewPanel.exportStandaloneHtml(),
+    ),
+  );
+
+  // Restore the preview panel after a window reload.
+  context.subscriptions.push(
+    vscode.window.registerWebviewPanelSerializer("confluencePreview", {
+      async deserializeWebviewPanel(panel, state) {
+        await previewPanel.restore(panel, state);
+      },
+    }),
   );
 
   // Keep preview in sync with the editor: refresh on save or text change
@@ -34,9 +46,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidSaveTextDocument((doc) => {
       previewPanel.onDocumentChanged(doc);
     }),
-  );
-
-  context.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument((e) => {
       previewPanel.onDocumentChanged(e.document, /* debounce */ true);
     }),
@@ -46,6 +55,31 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) previewPanel.onDocumentChanged(editor.document);
+    }),
+  );
+
+  // Editor scroll → preview scroll sync.
+  context.subscriptions.push(
+    vscode.window.onDidChangeTextEditorVisibleRanges((e) => {
+      previewPanel.onEditorScroll(e.textEditor);
+    }),
+  );
+
+  // Menu/keybinding gating for the optional HTML fallback.
+  const syncHtmlContext = () => {
+    const enabled = vscode.workspace
+      .getConfiguration("confluence-previewer")
+      .get<boolean>("enableForHtml", false);
+    void vscode.commands.executeCommand(
+      "setContext",
+      "confluence-previewer.enableForHtml",
+      enabled,
+    );
+  };
+  syncHtmlContext();
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration("confluence-previewer")) syncHtmlContext();
     }),
   );
 }

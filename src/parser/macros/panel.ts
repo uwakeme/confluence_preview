@@ -5,8 +5,12 @@
 
 import * as cheerio from "cheerio";
 import type { RenderContext } from "../elements";
-import { escapeAttr, escapeHtml } from "../sanitize";
-import { renderChildren } from "../elements";
+import {
+  escapeHtml,
+  isCssBorderStyle,
+  isCssColor,
+  isCssLength,
+} from "../sanitize";
 
 type Variant = "panel" | "note" | "info" | "warning" | "tip";
 
@@ -79,12 +83,14 @@ function renderCallout(
     const titleBG = params["titleBGColor"] ?? params["titlebgcolor"];
     const titleColor = params["titleColor"] ?? params["titlecolor"];
 
+    // Values land in a style attribute: only accept well-formed colors /
+    // lengths / enums so a crafted parameter cannot inject CSS declarations.
     const styles: string[] = [];
-    if (borderColor) styles.push(`--cf-panel-border: ${escapeAttr(borderColor)}`);
-    if (borderStyle) styles.push(`--cf-panel-border-style: ${escapeAttr(borderStyle)}`);
-    if (borderWidth) styles.push(`--cf-panel-border-width: ${escapeAttr(borderWidth)}`);
-    if (titleBG) styles.push(`--cf-panel-title-bg: ${escapeAttr(titleBG)}`);
-    if (titleColor) styles.push(`--cf-panel-title-color: ${escapeAttr(titleColor)}`);
+    if (borderColor && isCssColor(borderColor)) styles.push(`--cf-panel-border: ${borderColor.trim()}`);
+    if (borderStyle && isCssBorderStyle(borderStyle)) styles.push(`--cf-panel-border-style: ${borderStyle.trim().toLowerCase()}`);
+    if (borderWidth && isCssLength(borderWidth)) styles.push(`--cf-panel-border-width: ${borderWidth.trim()}`);
+    if (titleBG && isCssColor(titleBG)) styles.push(`--cf-panel-title-bg: ${titleBG.trim()}`);
+    if (titleColor && isCssColor(titleColor)) styles.push(`--cf-panel-title-color: ${titleColor.trim()}`);
     if (styles.length > 0) styleAttr = ` style="${styles.join("; ")}"`;
   }
 
@@ -92,9 +98,7 @@ function renderCallout(
     ? `<div class="cf-callout-title"><span class="cf-callout-icon">${icon}</span><span>${escapeHtml(
         title,
       )}</span></div>`
-    : `<div class="cf-callout-title"><span class="cf-callout-icon">${icon}</span><span>${escapeHtml(
-        defaultTitle(variant),
-      )}</span></div>`;
+    : "";
 
   return `<div class="cf-callout cf-callout-${variant}"${styleAttr}>${titleHtml}<div class="cf-callout-body">${bodyHtml}</div></div>`;
 }
